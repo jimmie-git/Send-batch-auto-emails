@@ -86,3 +86,12 @@ This app runs well in a Codespace. For public hosting you can deploy to services
 like Streamlit Community Cloud, PythonAnywhere, or Render. Each platform may have
 specific environment variable configuration steps.
 
+
+## Testing
+
+You can verify that the application starts correctly with:
+```bash
+python -m py_compile app.py
+streamlit run app.py --server.port 8080 --server.address 0.0.0.0
+```
+Stop the server with `Ctrl+C` when you see the URL message.
