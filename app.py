@@ -3,6 +3,10 @@ import pandas as pd
 import streamlit as st
 import smtplib
 from email.message import EmailMessage
+from dotenv import load_dotenv
+
+# Load variables from a .env file if present
+load_dotenv()
 
 st.set_page_config(page_title="Bulk Email Sender")
 
@@ -10,15 +14,23 @@ st.title("Bulk Email Sender")
 
 st.write(
     """
-Upload a CSV or Excel file with at least an `email` column. Optionally include
-`subject` and `message` columns for personalized content.
+Upload a CSV or Excel file with at least an `email` column. You can also
+optionally include `subject` and `message` columns for personalized content.
+If these columns are missing you can supply defaults below.
     """
 )
 
-uploaded_file = st.file_uploader("Choose CSV or Excel file", type=["csv", "xlsx"])
+# Allow the user to provide Gmail credentials in the UI, prefilled from env vars
+email_user = st.text_input("Gmail address", value=os.getenv("EMAIL_USER", ""))
+email_pass = st.text_input(
+    "Gmail app password", value=os.getenv("EMAIL_PASS", ""), type="password"
+)
 
-email_user = os.getenv("EMAIL_USER")
-email_pass = os.getenv("EMAIL_PASS")
+# Optional defaults if the uploaded file lacks these columns
+default_subject = st.text_input("Default subject", "Hello from Streamlit")
+default_message = st.text_area("Default message", "")
+
+uploaded_file = st.file_uploader("Choose CSV or Excel file", type=["csv", "xlsx"])
 
 if uploaded_file is not None:
     # Read the uploaded file into a DataFrame
@@ -32,7 +44,7 @@ if uploaded_file is not None:
 
     if st.button("Send Emails"):
         if not email_user or not email_pass:
-            st.error("EMAIL_USER and EMAIL_PASS environment variables must be set")
+            st.error("Please provide your Gmail address and app password.")
         else:
             successes = 0
             failures = 0
@@ -46,8 +58,8 @@ if uploaded_file is not None:
                     msg = EmailMessage()
                     msg["From"] = email_user
                     msg["To"] = row.get("email")
-                    msg["Subject"] = row.get("subject", "Hello from Streamlit")
-                    body = row.get("message", "")
+                    msg["Subject"] = row.get("subject", default_subject)
+                    body = row.get("message", default_message)
                     msg.set_content(body)
                     try:
                         server.send_message(msg)
