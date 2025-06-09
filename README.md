@@ -14,7 +14,9 @@ use inside GitHub Codespaces so no additional GUI tools are required.
    ```
 
 2. **Set Gmail credentials**
-   Export environment variables with your Gmail address and an [app password](https://support.google.com/accounts/answer/185833):
+   You can either export environment variables with your Gmail address and an [app password](https://support.google.com/accounts/answer/185833)
+   or simply type them into the Streamlit app when prompted.
+   To use environment variables:
    ```bash
    export EMAIL_USER="youraddress@gmail.com"
    export EMAIL_PASS="your_app_password"
@@ -28,8 +30,9 @@ use inside GitHub Codespaces so no additional GUI tools are required.
 
 4. **Upload your data**
    Prepare a CSV or Excel file with at least an `email` column. Optional columns
-   `subject` and `message` allow customizing each email. Upload the file via the
-   Streamlit interface and press **Send Emails**.
+   `subject` and `message` allow customizing each email. If those columns are not
+   present you can provide a default subject and message in the app. Upload the
+   file via the Streamlit interface and press **Send Emails**.
 
 ## File Format Example
 
@@ -44,7 +47,8 @@ use inside GitHub Codespaces so no additional GUI tools are required.
 - `EMAIL_PASS` – Gmail app password for authentication.
 
 You can copy `.env.example` to `.env` and fill in your values if you prefer
-using `python-dotenv`.
+using `python-dotenv`. Alternatively you can enter these credentials directly in
+the Streamlit interface when prompted.
 
 ## Deployment Options
 
