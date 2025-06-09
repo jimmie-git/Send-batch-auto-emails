@@ -5,38 +5,38 @@ import smtplib
 from email.message import EmailMessage
 from dotenv import load_dotenv
 
+# Configure the page
 st.set_page_config(page_title="Bulk Email Sender")
 
-# Load variables from a .env file if present
+# Automatically load EMAIL_USER and EMAIL_PASS from a .env file if present
 load_dotenv()
 
 st.title("Bulk Email Sender")
 
 st.write(
     """
-Upload a CSV or Excel file with at least an `email` column. You can also
-include optional `subject` and `message` columns for per-recipient
-customization. If those columns are missing, you'll be prompted for a single
-subject and message to use for everyone.
+    Upload a CSV or Excel file with at least an `email` column. Optional
+    `subject` and `message` columns let you personalize each email.
+    If those columns are missing, you'll be asked for a subject and message
+    to use for all recipients.
     """
 )
 
-# Input fields for Gmail credentials. If environment variables exist, they
-# populate the defaults so users can leave them blank.
+# Input fields for Gmail credentials. If environment variables exist, they are
+# pre-filled so the user does not need to type them each time.
 email_user = st.text_input("Gmail address", value=os.getenv("EMAIL_USER", ""))
 email_pass = st.text_input(
     "Gmail app password", value=os.getenv("EMAIL_PASS", ""), type="password"
 )
 
-
-# Drag-and-drop file uploader for CSV/Excel files
+# Drag-and-drop file uploader for recipient data
 uploaded_file = st.file_uploader(
     "Drag and drop or choose a CSV or Excel file",
     type=["csv", "xlsx"],
 )
 
 if uploaded_file is not None:
-    # Read the uploaded file into a DataFrame
+    # Read the uploaded file into a pandas DataFrame
     if uploaded_file.name.endswith(".csv"):
         df = pd.read_csv(uploaded_file)
     else:
@@ -49,7 +49,7 @@ if uploaded_file is not None:
     st.write("Preview of uploaded data:")
     st.dataframe(df.head())
 
-    # Default subject and message if not provided in the file
+    # Default subject and message when the file lacks these columns
     default_subject = st.text_input("Email subject", "Hello from Streamlit")
     default_message = st.text_area("Email message", "")
 
@@ -59,6 +59,7 @@ if uploaded_file is not None:
         else:
             successes = 0
             failures = 0
+            # Connect to Gmail's SMTP server using SSL
             with smtplib.SMTP_SSL("smtp.gmail.com", 465) as server:
                 try:
                     server.login(email_user, email_pass)

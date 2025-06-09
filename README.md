@@ -1,97 +1,81 @@
 # Bulk Email Sender
 
-This repository contains a simple Streamlit application that lets you send
-personalized bulk emails directly from a web browser. The app is intended for
-use inside GitHub Codespaces so no additional GUI tools are required.
+A simple Streamlit application for sending personalized bulk emails directly from a browser. It is designed to run entirely inside **GitHub Codespaces** so no desktop GUI is required.
 
-## Quick Start
+## Step 1: Verify Repository Setup
 
-1. **Create a virtual environment and install dependencies**
-   ```bash
-   python -m venv .venv
-   source .venv/bin/activate
-   pip install -r requirements.txt
-   ```
+Your repository should contain these files:
 
-2. **Provide Gmail credentials**
-   You can either export environment variables or simply type them directly into
-   the web interface. To avoid retyping every time, set environment variables or
-   create a `.env` file with your Gmail address and an
-   [app password](https://support.google.com/accounts/answer/185833):
-   ```bash
-   export EMAIL_USER="youraddress@gmail.com"
-   export EMAIL_PASS="your_app_password"
-   ```
-   Copy `.env.example` to `.env` if you want to store them in a file.
+- `app.py` – the Streamlit application.
+- `requirements.txt` – Python dependencies.
+- `.env.example` – sample environment variable file for Gmail credentials.
 
-3. **Run the app**
-   ```bash
-   streamlit run app.py --server.port 8080 --server.address 0.0.0.0
-   ```
-   In Codespaces, open the forwarded port (usually 8080) to view the Streamlit interface in your browser.
+Clone the repository or create a Codespace with these files in the project root.
 
+## Step 2: Choose a Web Interface
 
-4. **Upload your data**
-   Prepare a CSV or Excel file with at least an `email` column. Drag and drop
-   it onto the uploader. Optional `subject` and `message` columns can override
-   the subject and body you provide in the app.
+This project uses **Streamlit** because it provides an easy way to build web apps with drag-and-drop file upload widgets and requires only a single command to start. It runs in the browser and works well inside Codespaces without extra configuration.
 
-## Using the Application
+## Step 3: Set Up the Python Environment
 
-1. Open the forwarded port in your Codespace and you will see a simple web page.
-2. Drag and drop your CSV or Excel sheet onto the uploader (or click **Browse files**).
-3. Enter the subject and body of the email you want to send. If your file
-   includes `subject` or `message` columns, those values override what you type.
-4. Review the preview table to ensure your data looks correct and press
-   **Send Emails**.
+Create a virtual environment and install the dependencies listed in `requirements.txt`:
 
-## Example Usage in Codespaces
+```bash
+python -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+```
 
-Follow these steps in a brand-new Codespace to send your first batch of emails:
+The `requirements.txt` file contains:
 
-1. Create and activate a virtual environment:
-   ```bash
-   python -m venv .venv
-   source .venv/bin/activate
-   pip install -r requirements.txt
-   ```
-2. Start the Streamlit app and forward the port when prompted:
-   ```bash
-   streamlit run app.py --server.port 8080 --server.address 0.0.0.0
-   ```
-3. In your browser, enter your Gmail address and app password in the fields at the top.
-4. Drag and drop the CSV or Excel file containing your recipients.
-5. Review the preview table and click **Send Emails** when ready.
+```text
+streamlit>=1.34.0
+pandas
+openpyxl
+python-dotenv
+```
 
+## Step 4: Run the Application
 
-## File Format Example
+Provide your Gmail credentials either through environment variables or by editing a `.env` file based on `.env.example`:
 
-| email | subject | message |
-|-------|---------|---------|
-| alice@example.com | Hello | Hi Alice,\nthis is a test. |
-| bob@example.com | Hi Bob | Dear Bob,\nwelcome! |
+```bash
+export EMAIL_USER="youraddress@gmail.com"
+export EMAIL_PASS="your_app_password"
+```
 
-## Environment Variables
+Then start the Streamlit server:
 
-- `EMAIL_USER` – Gmail address used to send emails.
-- `EMAIL_PASS` – Gmail app password for authentication.
+```bash
+streamlit run app.py --server.port 8080 --server.address 0.0.0.0
+```
 
-You can copy `.env.example` to `.env` and fill in your values. These variables
-are loaded automatically with `python-dotenv`, but they are optional because the
-web interface also lets you enter them manually.
+Forward port 8080 in Codespaces and open the URL to view the interface.
 
-## Deployment Options
+## Step 5: Upload Data and Send Emails
 
-This app runs well in a Codespace. For public hosting you can deploy to services
-like Streamlit Community Cloud, PythonAnywhere, or Render. Each platform may have
-specific environment variable configuration steps.
+1. Drag and drop a CSV or Excel file containing an `email` column. Optional `subject` and `message` columns can override the defaults.
+2. If prompted, enter your Gmail address and app password.
+3. Provide a subject and message if your file does not include them.
+4. Click **Send Emails** to send messages via Gmail SMTP. A summary of successes and failures appears when done.
 
+## Step 6: Deployment Options
+
+The app works out of the box in Codespaces. To share it publicly you can deploy to services such as:
+
+- **Streamlit Community Cloud** – free for small projects.
+- **PythonAnywhere** – easy Python hosting with a free tier.
+- **Render** – supports deploying Streamlit apps with environment variables.
+
+Each platform requires setting `EMAIL_USER` and `EMAIL_PASS` as environment variables.
 
 ## Testing
 
-You can verify that the application starts correctly with:
+Verify the code by compiling and launching the server:
+
 ```bash
 python -m py_compile app.py
 streamlit run app.py --server.port 8080 --server.address 0.0.0.0
 ```
-Stop the server with `Ctrl+C` when you see the URL message.
+
+Stop the server with `Ctrl+C` once you see the URL.
